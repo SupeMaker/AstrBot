@@ -62,5 +62,5 @@ class ProcessStage(Stage):
             if (
                 event.get_result() and not event.is_stopped()
             ) or not event.get_result():
-                async for _ in self.agent_sub_stage.process(event): # 调用LLM处理请求
+                async for _ in self.agent_sub_stage.process(event): # 执行完所有 handler 之后才调用 LLM 处理请求
                     yield

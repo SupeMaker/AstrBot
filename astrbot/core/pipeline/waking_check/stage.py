@@ -333,7 +333,7 @@ class WakingCheckStage(Stage):
                 )
                 # 如果不是命令组处理器，添加到激活列表
                 if not is_group_cmd_handler:
-                    activated_handlers.append(handler)
+                    activated_handlers.append(handler) # 添加到激活刘表
                     # 如果有解析的参数，保存到参数字典中
                     if "parsed_params" in event.get_extra(default={}):
                         handlers_parsed_params[handler.handler_full_name] = (

@@ -563,7 +563,7 @@ class ProviderOpenAIOfficial(Provider):
         self._apply_provider_specific_extra_body_overrides(extra_body)
 
         self._sanitize_assistant_messages(payloads)
-
+        # 构建流式响应对象
         stream = await retry_provider_request(
             "OpenAI",
             lambda: self.client.chat.completions.create(
@@ -579,7 +579,7 @@ class ProviderOpenAIOfficial(Provider):
 
         state = ChatCompletionStreamState()
 
-        async for chunk in stream:
+        async for chunk in stream: # 一点点获取chunk
             choice = chunk.choices[0] if chunk.choices else None
             delta = choice.delta if choice else None
 
@@ -1228,7 +1228,7 @@ class ProviderOpenAIOfficial(Provider):
         for retry_cnt in range(max_retries):
             try:
                 self.client.api_key = chosen_key
-                async for response in self._query_stream(
+                async for response in self._query_stream( # TODO 流式对话
                     payloads,
                     func_tool,
                     request_max_retries=request_max_retries,

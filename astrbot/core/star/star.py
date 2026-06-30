@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from astrbot.core.config import AstrBotConfig
 
 star_registry: list[StarMetadata] = []
-star_map: dict[str, StarMetadata] = {}
+star_map: dict[str, StarMetadata] = {} # 用来存放插件元数据的映射关系
 """key 是模块路径，__module__"""
 
 if TYPE_CHECKING:

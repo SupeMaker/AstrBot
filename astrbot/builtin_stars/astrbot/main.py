@@ -52,7 +52,7 @@ class Main(star.Star):
     async def handle_empty_mention(self, event: AstrMessageEvent):
         """处理只有一个 @ 或仅有唤醒前缀的消息，并等待用户下一条内容。"""
         try:
-            messages = event.get_messages()
+            messages = event.get_messages() # Plain(type=<ComponentType.Plain: 'Plain'>, text='你好')
             cfg = self.context.get_config(umo=event.unified_msg_origin)
             p_settings = cfg["platform_settings"]
             wake_prefix = cfg.get("wake_prefix", [])

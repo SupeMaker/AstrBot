@@ -34,7 +34,7 @@ async def call_handler(
     trace_ = None
 
     try:
-        ready_to_call = handler(event, *args, **kwargs)
+        ready_to_call = handler(event, *args, **kwargs) # 调用对应的handler方法
     except TypeError:
         logger.error("处理函数参数不匹配，请检查 handler 的定义。", exc_info=True)
 
@@ -64,7 +64,7 @@ async def call_handler(
             raise e
     elif inspect.iscoroutine(ready_to_call):
         # 如果只是一个协程, 直接执行
-        ret = await ready_to_call
+        ret = await ready_to_call # 比如调用handle_session_control_agent
         if isinstance(ret, MessageEventResult | CommandResult):
             event.set_result(ret)
             yield

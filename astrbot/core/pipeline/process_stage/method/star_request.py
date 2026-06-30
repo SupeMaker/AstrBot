@@ -45,8 +45,8 @@ class StarRequestSubStage(Stage):
                 continue
             logger.debug(f"plugin -> {md.name} - {handler.handler_name}")
             try:
-                wrapper = call_handler(event, handler.handler, **params)
-                async for ret in wrapper:
+                wrapper = call_handler(event, handler.handler, **params) # 调用插件的处理函数，比如astrbot\builtin_stars\astrbot\main.py的Main()类中的handle_session_control_agent方法，也就是装饰器装饰的函数
+                async for ret in wrapper: # handler.handler里面的yield会跳出到这里，进入到下面的yield，如果内部函数有多个yield，这里也会反复调用
                     yield ret
                 if event.is_stopped():
                     break

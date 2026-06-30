@@ -918,7 +918,7 @@ class PluginManager:
         inactivated_llm_tools = await sp.global_get("inactivated_llm_tools", [])
         alter_cmd = await sp.global_get("alter_cmd", {})
 
-        plugin_modules = self._get_plugin_modules()
+        plugin_modules = self._get_plugin_modules() # [{'pname': 'astrbot', 'module': 'main', 'module_path': 'C:\\Users\\Admin\\Master\\projects\\github\\AstrBot\\astrbot\\builtin_stars\\astrbot\\main', 'reserved': True}, {'pname': 'builtin_commands', 'module': 'main', 'module_path': 'C:\\Users\\Admin\\Master\\projects\\github\\AstrBot\\astrbot\\builtin_stars\\builtin_commands\\main', 'reserved': True}]
         if plugin_modules is None:
             return False, "未找到任何插件模块"
 
@@ -1146,7 +1146,7 @@ class PluginManager:
                                 context=self.context,
                             )  # 实例化插件类
 
-                    metadata = self._load_plugin_metadata(
+                    metadata = self._load_plugin_metadata( # 这里查找astrbot\builtin_stars目录下的插件元数据，也就是metadata.yaml文件，注册插件
                         plugin_path=plugin_dir_path,
                         plugin_obj=obj,
                     )
@@ -1172,8 +1172,8 @@ class PluginManager:
                     metadata.reserved = reserved
                     metadata.star_cls_type = plugin_cls
                     metadata.module_path = path
-                    star_map[path] = metadata
-                    star_registry.append(metadata)
+                    star_map[path] = metadata # 将插件元数据添加到star_map中，这里的path一般为插件的main函数路径'astrbot.builtin_stars.astrbot.main'
+                    star_registry.append(metadata) # 注册插件
 
                 # 禁用/启用插件
                 if metadata.module_path in inactivated_plugins:

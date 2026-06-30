@@ -169,7 +169,7 @@ class InternalAgentSubStage(Stage):
         try:
             streaming_response = self.streaming_response
             if (enable_streaming := event.get_extra("enable_streaming")) is not None:
-                streaming_response = bool(enable_streaming)
+                streaming_response = bool(enable_streaming) # True
 
             has_provider_request = event.get_extra("provider_request") is not None
             has_valid_message = bool(event.message_str and event.message_str.strip())
@@ -239,7 +239,7 @@ class InternalAgentSubStage(Stage):
                                 llm_error_message,
                             )
                         return
-
+                    # 给 agent_runner 赋值
                     agent_runner = build_result.agent_runner
                     req = build_result.provider_request
                     provider = build_result.provider

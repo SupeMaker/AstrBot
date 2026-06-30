@@ -64,7 +64,7 @@ class SessionPluginManager:
 
         session_id = event.unified_msg_origin
         filtered_handlers = []
-
+        # TODO 这里会调用astrbot\dashboard\services\chat_service.py的build_chat_stream()里面的stream()方法
         session_plugin_config = await sp.get_async(
             scope="umo",
             scope_id=session_id,
