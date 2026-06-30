@@ -471,7 +471,7 @@ class ToolLoopAgentRunner(BaseAgentRunner[TContext]):
             # For primary provider we keep explicit model selection if provided.
             payload["model"] = self.req.model
         if self.streaming:
-            stream = self.provider.text_chat_stream(**payload)
+            stream = self.provider.text_chat_stream(**payload) # TODO 调用模型
             async for resp in stream:  # type: ignore
                 yield resp
         else:

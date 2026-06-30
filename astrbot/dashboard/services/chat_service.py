@@ -935,7 +935,7 @@ class ChatService:
                         f"Failed to persist pending webchat message: {e}",
                         exc_info=True,
                     )
-                webchat_queue_mgr.remove_back_queue(message_id)
+                webchat_queue_mgr.remove_back_queue(message_id) # 这里清除 back_queue
         # chat_queue: 地址：Queue at 0x216a351c7d0, 这里的 chat_queue 跟 astrbot\core\platform\sources\webchat\webchat_queue_mgr.py 的 WebChatQueueMgr 类的 _listen_to_queue 方法中的 queue 是同一个。这里推入信息之后，会被_listen_to_queue 方法监听。
         chat_queue = webchat_queue_mgr.get_or_create_queue(webchat_conv_id) # 这个queue跟back_queue不一样，后者用来接收模型的返回结果，然后传递给前端，这个是用来激活platform消息处理的。而且这里面会启动监听器。
         await chat_queue.put( # TODO 这里将信息放入queue

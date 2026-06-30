@@ -46,8 +46,8 @@ def get_handler_or_create(
     **kwargs,
 ) -> StarHandlerMetadata:
     """获取 Handler 或者创建一个新的 Handler"""
-    handler_full_name = get_handler_full_name(handler)
-    md = star_handlers_registry.get_handler_by_full_name(handler_full_name)
+    handler_full_name = get_handler_full_name(handler) # 获取 handler 的全名，比如'astrbot.builtin_stars.astrbot.main_handle_session_control_agent'
+    md = star_handlers_registry.get_handler_by_full_name(handler_full_name) # 在注册表中获取 handler
     if md:
         return md
     md = StarHandlerMetadata(
@@ -60,7 +60,7 @@ def get_handler_or_create(
     )
 
     # 插件handler的附加额外信息
-    if handler.__doc__:
+    if handler.__doc__: # 获取 handler 的 docstring，其实就是方法开头的描述注释
         md.desc = handler.__doc__.strip()
     if "desc" in kwargs:
         md.desc = kwargs["desc"]
@@ -256,13 +256,13 @@ class RegisteringCommandable:
 def register_event_message_type(event_message_type: EventMessageType, **kwargs):
     """注册一个 EventMessageType"""
 
-    def decorator(awaitable):
+    def decorator(awaitable): # awaitable为装饰器下面的函数'<function Main.handle_session_control_agent at 0x000001E36A136F20>'
         handler_md = get_handler_or_create(
             awaitable,
             EventType.AdapterMessageEvent,
             **kwargs,
         )
-        handler_md.event_filters.append(EventMessageTypeFilter(event_message_type))
+        handler_md.event_filters.append(EventMessageTypeFilter(event_message_type)) # event_message_type 为装饰器的传递进来的参数，比如    @filter.event_message_type(filter.EventMessageType.ALL, priority=maxsize)中的filter.EventMessageType.ALL,
         return awaitable
 
     return decorator

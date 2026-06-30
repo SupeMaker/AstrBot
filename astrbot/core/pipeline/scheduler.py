@@ -39,19 +39,40 @@ class PipelineScheduler:
             event (AstrMessageEvent): 事件对象
             from_stage (int): 从第几个阶段开始执行, 默认从0开始
 
+        整个直接流程：
+        [20:50:41.591] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 WakingCheckStage
+        [20:50:41.596] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 WhitelistCheckStage
+        [20:50:41.596] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 SessionStatusCheckStage
+        [20:50:41.598] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 RateLimitStage
+        [20:50:41.598] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 ContentSafetyCheckStage
+        [20:50:41.599] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 PreProcessStage
+        [20:50:41.600] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 ProcessStage
+        [20:50:41.600] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 ResultDecorateStage
+        [20:50:41.600] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 RespondStage
+        [20:50:41.602] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 ResultDecorateStage
+        [20:50:41.602] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 RespondStage
+        [20:50:41.603] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 ResultDecorateStage
+        [20:50:41.603] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 RespondStage
+        [20:50:41.653] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 ResultDecorateStage
+        [20:50:41.653] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 RespondStage
+        [20:50:41.654] [Core] [INFO] [respond.stage:183]: Prepare to send - astrbot/astrbot: 
+        [20:50:41.654] [Core] [INFO] [respond.stage:199]: 应用流式输出(webchat)
+        [20:50:42.436] [Core] [INFO] [utils.llm_metadata:63]: Successfully fetched metadata for 2664 LLMs.
+        [20:50:43.050] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 ResultDecorateStage
+        [20:50:43.051] [Core] [INFO] [pipeline.scheduler:45]: 执行阶段 RespondStage
         """
         for i in range(from_stage, len(self.stages)):
             stage = self.stages[i]  # 获取当前要执行的阶段
-            # logger.debug(f"执行阶段 {stage.__class__.__name__}")
+            logger.info(f"执行阶段 {stage.__class__.__name__}")
             coroutine = stage.process(
                 event,
             )  # 调用阶段的process方法, 返回协程或者异步生成器
 
             if isinstance(coroutine, AsyncGenerator):
                 # 如果返回的是异步生成器, 实现洋葱模型的核心
-                async for _ in coroutine:
+                async for _ in coroutine:  # i = 6时，深层函数的yield会返回，然后进入下面的代码
                     # 此处是前置处理完成后的暂停点(yield), 下面开始执行后续阶段
-                    if event.is_stopped():
+                    if event.is_stopped(): 
                         logger.debug(
                             f"阶段 {stage.__class__.__name__} 已终止事件传播。",
                         )
