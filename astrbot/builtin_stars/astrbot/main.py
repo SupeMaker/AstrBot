@@ -108,8 +108,8 @@ class Main(star.Star):
                 except Exception as e:
                     logger.error(f"LLM response failed: {e!s}")
                     yield event.plain_result("想要问什么呢？😄")
-
-            @session_waiter(60)
+            # 具体的会话控制器使用方法
+            @session_waiter(60) # 注册一个会话控制器，设置超时时间为 60 秒，不记录历史消息链
             async def empty_mention_waiter(
                 controller: SessionController,
                 event: AstrMessageEvent,
@@ -122,7 +122,7 @@ class Main(star.Star):
                 )
                 new_event = copy.copy(event)
                 self.context.get_event_queue().put_nowait(new_event)
-                event.stop_event()
+                event.stop_event() # 停止时间的传播
                 controller.stop()
 
             try:
